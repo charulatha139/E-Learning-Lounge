@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>HTML Quiz Recommendations</title>
+    <link rel="stylesheet" href="css/recommend.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background: #f9f9f9;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+            border-radius: 8px;
+        }
+
+            .modal h2 {
+                margin-top: 0;
+            }
+
+            .modal ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .modal li {
+                margin: 0.5rem 0;
+            }
+
+        .locked {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .unlocked {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .btn {
+            margin-top: 1rem;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" class="overlay" style="display:none;"></div>
+    <div id="modal" class="modal" style="display:none;">
+        <h3 id="video-status" style="display:none;"></h3>
+
+        <h2>HTML Quiz Score: <span id="your-score"></span>/10</h2>
+        <p id="recommendation-text"></p>
+        <ul id="recommendation-list"></ul>
+        <a href="courses.html" class="btn">Browse All Courses</a>
+    </div>
+
+    <script>
+        // 1) Get the score
+        const params = new URLSearchParams(window.location.search);
+        const score = parseInt(params.get('score'), 10);
+
+        // 2) Suggestions for HTML learners
+        const suggestions = {
+            beginner: [
+                { title: 'HTML Crash Course For Absolute Beginners', url: 'https://youtu.be/UB1O30fR-EE' },
+                { title: 'Learn HTML in 12 Minutes', url: 'https://youtu.be/bWPMSSsVdPk' }
+            ],
+            intermediate: [
+                { title: 'HTML Tutorial for Beginners', url: 'https://youtu.be/pTB0EiLXUC8' },
+                { title: 'Semantic HTML Crash Course', url: 'https://youtu.be/0pThnRneDjw' }
+            ],
+            advanced: [
+                { title: 'HTML5 Advanced Features', url: 'https://youtu.be/H1elmMBnykA' },
+                { title: 'Building a Real-World Website', url: 'https://youtu.be/UB1O30fR-EE' }
+            ]
+        };
+
+        // 3) Locked/unlocked banner
+        const statusEl = document.getElementById('video-status');
+        if (score < 6) {
+            statusEl.textContent = 'Next video not unlocked';
+            statusEl.className = 'locked';
+            statusEl.style.display = 'block';
+        } else {
+            statusEl.textContent = 'Next video unlocked';
+            statusEl.className = 'unlocked';
+            statusEl.style.display = 'block';
+        }
+
+        // 4) Category & message
+        let category, text;
+        if (score <= 3) {
+            category = 'beginner';
+            text = 'You might need to brush up on the basics. Try these HTML tutorials:';
+        } else if (score <= 7) {
+            category = 'intermediate';
+            text = 'Good job! Level up with these intermediate HTML lessons:';
+        } else {
+            category = 'advanced';
+            text = 'Excellent! Challenge yourself with these advanced HTML resources:';
+        }
+
+        // 5) Populate UI
+        document.getElementById('your-score').textContent = score;
+        document.getElementById('recommendation-text').textContent = text;
+        const listEl = document.getElementById('recommendation-list');
+        suggestions[category].forEach(link => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${link.url}" target="_blank">${link.title}</a>`;
+            listEl.appendChild(li);
+        });
+
+        // 6) Show modal
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modal').style.display = 'block';
+    </script>
+
+</body>
+</html>

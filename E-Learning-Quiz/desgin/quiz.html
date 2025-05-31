@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/quiz.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>quiz</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<section class="quiz">
+  <div class="quiz-container">
+    <h3>Quiz for <span id="video-title"></span></h3>
+    <form id="quiz-form">
+      <div class="question">
+        <p>1. What does HTML stand for?</p>
+        <label><input type="radio" name="q1" value="A"> HyperText Markup Language</label><br>
+        <label><input type="radio" name="q1" value="B"> Home Tool Markup Language</label><br>
+        <label><input type="radio" name="q1" value="C"> Hyperlinks and Text Markup Language</label>
+      </div>
+      <!-- questions 2–10 same structure -->
+      <div class="question">
+        <p>2. Which tag creates a hyperlink?</p>
+        <label><input type="radio" name="q2" value="A"> &lt;link&gt;</label><br>
+        <label><input type="radio" name="q2" value="B"> &lt;a&gt;</label><br>
+        <label><input type="radio" name="q2" value="C"> &lt;href&gt;</label>
+      </div>
+      <div class="question">
+        <p>3. Which attribute specifies alternate text for an image?</p>
+        <label><input type="radio" name="q3" value="A"> src</label><br>
+        <label><input type="radio" name="q3" value="B"> alt</label><br>
+        <label><input type="radio" name="q3" value="C"> title</label>
+      </div>
+      <div class="question">
+        <p>4. Which tag defines an unordered list?</p>
+        <label><input type="radio" name="q4" value="A"> &lt;ol&gt;</label><br>
+        <label><input type="radio" name="q4" value="B"> &lt;ul&gt;</label><br>
+        <label><input type="radio" name="q4" value="C"> &lt;li&gt;</label>
+      </div>
+      <div class="question">
+        <p>5. How do you insert a comment in HTML?</p>
+        <label><input type="radio" name="q5" value="A"> // comment</label><br>
+        <label><input type="radio" name="q5" value="B"> &lt;!-- comment --&gt;</label><br>
+        <label><input type="radio" name="q5" value="C"> ' comment '</label>
+      </div>
+      <div class="question">
+        <p>6. Which tag defines a table row?</p>
+        <label><input type="radio" name="q6" value="A"> &lt;td&gt;</label><br>
+        <label><input type="radio" name="q6" value="B"> &lt;tr&gt;</label><br>
+        <label><input type="radio" name="q6" value="C"> &lt;th&gt;</label>
+      </div>
+      <div class="question">
+        <p>7. Which tag is used to define a form?</p>
+        <label><input type="radio" name="q7" value="A"> &lt;input&gt;</label><br>
+        <label><input type="radio" name="q7" value="B"> &lt;form&gt;</label><br>
+        <label><input type="radio" name="q7" value="C"> &lt;fieldset&gt;</label>
+      </div>
+      <div class="question">
+        <p>8. What is the correct HTML tag for the largest heading?</p>
+        <label><input type="radio" name="q8" value="A"> &lt;h1&gt;</label><br>
+        <label><input type="radio" name="q8" value="B"> &lt;h6&gt;</label><br>
+        <label><input type="radio" name="q8" value="C"> &lt;heading&gt;</label>
+      </div>
+      <div class="question">
+        <p>9. Which element is used to define a footer?</p>
+        <label><input type="radio" name="q9" value="A"> &lt;footer&gt;</label><br>
+        <label><input type="radio" name="q9" value="B"> &lt;bottom&gt;</label><br>
+        <label><input type="radio" name="q9" value="C"> &lt;section&gt;</label>
+      </div>
+      <div class="question">
+        <p>10. Which attribute is used for inline styles?</p>
+        <label><input type="radio" name="q10" value="A"> class</label><br>
+        <label><input type="radio" name="q10" value="B"> style</label><br>
+        <label><input type="radio" name="q10" value="C"> font</label>
+      </div>
+      <input type="submit" value="Submit Quiz" class="inline-btn">
+    </form>
+  </div>
+</section>
+
+
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const video = params.get('video') || 'vid-1';
+  const videoNames = ['vid-1','vid-2','vid-3','vid-4','vid-5','vid-6'];
+  document.getElementById('video-title').textContent = video.replace(/-/g, ' ');
+  const correct = { q1:'A',q2:'B',q3:'B',q4:'B',q5:'B',q6:'B',q7:'B',q8:'A',q9:'A',q10:'B' };
+  document.getElementById('quiz-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const answers = new FormData(e.target);
+    for (let i=1; i<=10; i++) if (!answers.get('q'+i)) { alert('Please answer all questions'); return; }
+    let score = 0;
+    for (let i=1; i<=10; i++) if (answers.get('q'+i) === correct['q'+i]) score++;
+    // store pass/fail
+    localStorage.setItem('quiz_' + video, score >= 6);
+
+    // redirect to recommendation page with score & video id
+    window.location.href = `recommend.html?video=${video}&score=${score}`;
+  });
+</script>
+</body>
+</html>
